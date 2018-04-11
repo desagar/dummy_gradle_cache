@@ -1,0 +1,19 @@
+box: erds/gcloud-with-java-8
+test:
+  steps:
+    - script:
+        name: prepare environment
+        code: |
+          mkdir -p $WERCKER_CACHE_DIR/artifactory
+          mkdir -p $WERCKER_CACHE_DIR/build
+          export GRADLE_USER_HOME=$WERCKER_CACHE_DIR/artifactory
+          export BUILD_DIRECTORY=$WERCKER_CACHE_DIR/build
+          printenv
+          cp -r $WERCKER_SOURCE_DIR/* $BUILD_DIRECTORY
+deploy:
+  steps:
+    - script:
+        name: prepare environment
+        code: |
+          export GRADLE_USER_HOME=$WERCKER_CACHE_DIR/artifactory
+          export BUILD_DIRECTORY=$WERCKER_CACHE_DIR/build
