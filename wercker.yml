@@ -2,7 +2,7 @@ box: erds/gcloud-with-java-8
 test:
   steps:
     - script:
-        name: prepare environment
+        name: prepare environment2
         code: |
           mkdir -p $WERCKER_CACHE_DIR/artifactory
           mkdir -p $WERCKER_CACHE_DIR/build
