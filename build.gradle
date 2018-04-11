@@ -1,20 +1,114 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.google.cloud.tools.appengine'
+apply plugin: 'com.moowork.node'
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+      url 'https://maven-central.storage.googleapis.com'             // Google's mirror of Maven Central
+    }
+}
 buildscript {
-  repositories {
-    gradlePluginPortal()
-  }
-  dependencies {
-    classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven {
+          url "https://plugins.gradle.org/m2/"
+        } 
+    }
+    dependencies {
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
+        classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+    }
+}
+dependencies {
+    compile 'com.google.appengine:appengine-api-1.0-sdk:+'  // Latest App Engine Api's
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile 'com.google.appengine:appengine:+'
+}
+// ####################################
+// configuration for gradle node plugin
+// ####################################
+node {
+    version = '7.0.0'
+    npmVersion = '5.0.3'
+    download = true
+}
+// ####################
+// Cache config for npm
+// ####################
+task npmCacheConfig(type: NpmTask) {
+    description = "Configure the NPM cache"
+    def npmCacheDir = "${gradle.getGradleUserHomeDir()}/caches/npm"
+    args = [ 'config', 'set', 'cache', npmCacheDir ]
+}
+// #############
+// installs node
+// #############
+task npmPackages(type: NpmTask, dependsOn: npmCacheConfig) {
+    description = "Install Node.js packages"
+    args = [ 'install' ]
+    inputs.files file('package.json')
+    outputs.files file('node_modules')
+}
+// #############
+// bower install
+// #############
+task bowerInstall(type: NodeTask) {
+    inputs.files file('bower.json')
+    outputs.files file('bower_components')
+    script = file('node_modules/bower/bin/bower')
+    args = ["--config.storage.cache=${gradle.getGradleUserHomeDir()}/admin/caches/bower/cache",
+            "--config.storage.packages=${gradle.getGradleUserHomeDir()}/admin/caches/bower/packages",
+            "--config.storage.registry=${gradle.getGradleUserHomeDir()}/admin/caches/bower/registry",
+            "--allow-root",
+            'install']
+    dependsOn npmPackages
+}
+task installPolymerCLI(type: NpmTask) {
+  // install the express package only
+  args = ['install', '-g','polymer-cli']
+  dependsOn bowerInstall
+}
+task polymerServe(type: NpmTask) {
+  // install the express package only
+  args = ['run', 'serve']
+  dependsOn installPolymerCLI
+}
+task polymerTest(type: NpmTask) {
+  // install the express package only
+  args = ['run', 'test']
+  dependsOn installPolymerCLI
+}
+task polymerBuild(type: NpmTask) {
+  // install the express package only
+  args = ['run', 'build']
+  dependsOn installPolymerCLI
+}
+sourceSets {
+    main {
+        java {
+            srcDirs = ['build/www']
+        }
+    }
+}
+war {
+  with {
+    from ("${buildDir}/es6-bundled")
   }
 }
-
-apply plugin: "com.moowork.node"
-//plugins {
-//  id "com.moowork.node" version "1.2.0"
-//}
-
-task buildPolymer(type: NodeTask) {// dependsOn: installBowerPackages) { 
-    script = file("node_modules/polymer-cli/bin/polymer")
-    args = ['build']
-    inputs.dir "./"
-    outputs.dir "build"
+war.dependsOn bowerInstall
+task explodedWar(type: Copy) {
+    into "$buildDir/exploded-war"
+    with war
+}
+appengine {  // App Engine tasks configuration
+  deploy {   // deploy configuration
+    version = 'v1'
+    project = 'prax-dev'
+    stopPreviousVersion = true  // default - stop the current version
+    promote = true              // default - & make this the current version
+  }
 }
