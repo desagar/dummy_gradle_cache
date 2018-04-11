@@ -1,5 +1,5 @@
 box: erds/gcloud-with-java-8
-test:
+build:
   steps:
     - script:
         name: prepare environment
