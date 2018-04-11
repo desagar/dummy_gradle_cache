@@ -1,27 +1,16 @@
-plugins {
-  id "com.moowork.node" version "1.2.0"
+buildscript {
+  repositories {
+    gradlePluginPortal()
+  }
+  dependencies {
+    classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+  }
 }
 
-/*node {
-    //version = '0.12.2'
-    //npmVersion = '2.7.5'
-    download = true
-}*/
-
-/*task npmCacheConfig(type: NpmTask) {
-    description = "Configure the NPM cache"
-    def npmCacheDir = "${gradle.getGradleUserHomeDir()}/caches/npm"
-    outputs.files file(npmCacheDir)
-    args = [ 'config', 'set', 'cache', npmCacheDir ]
-}
-
-task npmPackages(type: NpmTask, dependsOn: npmCacheConfig) {
-    description = "Install Node.js packages"
-    args = [ 'install' ]
-    inputs.files file('package.json')
-    outputs.files file('node_modules')
-}*/
-
+apply plugin: "com.moowork.node"
+//plugins {
+//  id "com.moowork.node" version "1.2.0"
+//}
 
 task buildPolymer(type: NodeTask) {// dependsOn: installBowerPackages) { 
     script = file("node_modules/polymer-cli/bin/polymer")
