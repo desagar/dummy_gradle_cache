@@ -43,6 +43,9 @@ task npmCacheConfig(type: NpmTask) {
     description = "Configure the NPM cache"
     def npmCacheDir = "${gradle.getGradleUserHomeDir()}/caches/npm"
     args = [ 'config', 'set', 'cache', npmCacheDir ]
+    doLast {
+      print "NPM cache dir is ${gradle.getGradleUserHomeDir()}/caches/npm"
+    }
 }
 // #############
 // installs node

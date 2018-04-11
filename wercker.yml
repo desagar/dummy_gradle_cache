@@ -14,7 +14,7 @@ test:
     - script:
         name: polymer build 
         code: |
-          ./gradlew --project-cache-dir=$BUILD_DIRECTORY --rerun-tasks polymerBuild
+          ./gradlew -i --project-cache-dir=$BUILD_DIRECTORY --rerun-tasks polymerBuild
 deploy:
   steps:
     - script:
