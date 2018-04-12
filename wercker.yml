@@ -9,7 +9,6 @@ test:
           export GRADLE_USER_HOME=$WERCKER_CACHE_DIR/artifactory
           export BUILD_DIRECTORY=$WERCKER_CACHE_DIR/build
           printenv
-          chmod u+w $WERCKER_SOURCE_DIR
           ./gradlew -v
 
     - script:
