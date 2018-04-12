@@ -70,25 +70,25 @@ task bowerInstall(type: NodeTask) {
             'install']
     dependsOn npmPackages
 }
-task installPolymerCLI(type: NpmTask) {
+/*task installPolymerCLI(type: NpmTask) {
   // install the express package only
   args = ['install', '-g','polymer-cli']
   dependsOn bowerInstall
-}
+}*/
 task polymerServe(type: NpmTask) {
   // install the express package only
   args = ['run', 'serve']
-  dependsOn installPolymerCLI
+  //dependsOn installPolymerCLI
 }
 task polymerTest(type: NpmTask) {
   // install the express package only
   args = ['run', 'test']
-  dependsOn installPolymerCLI
+  //dependsOn installPolymerCLI
 }
 task polymerBuild(type: NpmTask) {
   // install the express package only
   args = ['run', 'build']
-  dependsOn installPolymerCLI
+  //dependsOn installPolymerCLI
 }
 sourceSets {
     main {
