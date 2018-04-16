@@ -14,10 +14,14 @@ test:
     - script:
         name: polymer build 
         code: |
-          echo "output dir: $WERCKER_OUTPUT_DIR"
-          ls -l $WERCKER_OUTPUT_DIR
-          cp wercker.yml $WERCKER_OUTPUT_DIR
-          #./gradlew -i --project-cache-dir=$BUILD_DIRECTORY --rerun-tasks polymerBuild
+          ./gradlew -i --project-cache-dir=$BUILD_DIRECTORY --rerun-tasks polymerBuild
+
+    - script:
+        name: prepare output
+        code: |
+          mkdir $WERCKER_OUTPUT_DIR/build 
+          cp -r ./build/es* $WERCKER_OUTPUT_DIR/build 
+          cp build.gradle $WERCKER_OUTPUT_DIR
 
 deploy:
   steps:
