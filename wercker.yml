@@ -14,7 +14,11 @@ test:
     - script:
         name: polymer build 
         code: |
+          echo "Cd to $WERCKER_CACHE_DIR"
+          ls
+          cd $WERCKER_CACHE_DIR
           ./gradlew -i --project-cache-dir=$BUILD_DIRECTORY --rerun-tasks polymerBuild
+
 deploy:
   steps:
     - script:
