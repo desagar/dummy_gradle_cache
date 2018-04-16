@@ -17,6 +17,7 @@ test:
           cd $WERCKER_OUTPUT_DIR
           echo "output dir: $WERCKER_OUTPUT_DIR"
           ls -l
+          cp wercker.yml $WERCKER_OUTPUT_DIR
           #./gradlew -i --project-cache-dir=$BUILD_DIRECTORY --rerun-tasks polymerBuild
 
 deploy:
