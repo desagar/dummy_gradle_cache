@@ -14,9 +14,8 @@ test:
     - script:
         name: polymer build 
         code: |
-          cd $WERCKER_OUTPUT_DIR
           echo "output dir: $WERCKER_OUTPUT_DIR"
-          ls -l
+          ls -l $WERCKER_OUTPUT_DIR
           cp wercker.yml $WERCKER_OUTPUT_DIR
           #./gradlew -i --project-cache-dir=$BUILD_DIRECTORY --rerun-tasks polymerBuild
 
